@@ -50,8 +50,8 @@ async def supervisor(state: SupervisorState) -> Command[Literal["supervisor_tool
     messages = [SystemMessage(content=system_message)] + supervisor_messages
 
     supervisor_tools = [ConductResearch, ResearchComplete, think_tool]
-    model_with_tools = model.bind_tools([supervisor_tools])
-    response = await model_with_tools.invoke(messages)
+    model_with_tools = model.bind_tools(supervisor_tools)
+    response = await model_with_tools.ainvoke(messages)
 
     return Command(
         goto="supervisor_tools",
@@ -139,13 +139,13 @@ async def supervisor_tools(state: SupervisorState) -> Command[Literal["superviso
                     for tool_call in research_tool_calls
                 ]
             
-            # Wait for all research to complete
-            tool_results = await asyncio.gather(*coros)
-            # Format research results as tool messages
+                # Wait for all research to complete
+                tool_results = await asyncio.gather(*coros)
+                # Format research results as tool messages
                 # Each sub-agent returns compressed research findings in result["compressed_research"]
                 # We write this compressed research as the content of a ToolMessage, which allows
                 # the supervisor to later retrieve these findings via get_notes_from_tool_calls()
-            research_tool_messages = [
+                research_tool_messages = [
                     ToolMessage(
                         content=result.get("compressed_research", "Error synthesizing research report"),
                         name=tool_call["name"],
