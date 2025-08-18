@@ -4,15 +4,10 @@ from prompts import final_report_generation_prompt
 from utils import get_today_str
 from langchain_core.messages import HumanMessage
 import asyncio
-from dotenv import load_dotenv
+from config import config
 
-
-# Load environment variables from .env file
-
-load_dotenv()
-
-
-writer_model = init_chat_model(model="openai:gpt-4.1", max_tokens=32000)
+# Initialize model using config
+writer_model = init_chat_model(model=config.get_final_report_agent_model(), max_tokens=32000)
 
 async def final_report_generation(state: AgentState):
     """

@@ -2,13 +2,13 @@ from state_supervisor import SupervisorState
 from langgraph.types import Command
 from typing_extensions import Literal
 from langchain.chat_models import init_chat_model
-from dotenv import load_dotenv
+from config import config
 from prompts import lead_researcher_prompt
 from utils import get_today_str
 from langchain_core.messages import (
-    HumanMessage, 
-    BaseMessage, 
-    SystemMessage, 
+    HumanMessage,
+    BaseMessage,
+    SystemMessage,
     ToolMessage,
     filter_messages
 )
@@ -18,13 +18,8 @@ from research_agent import researcher_agent
 import asyncio
 from utils import get_today_str
 
-
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Initialize model
-model = init_chat_model(model="openai:gpt-4.1", temperature=0.0)
+# Initialize model using config
+model = init_chat_model(model=config.get_supervisor_agent_model(), temperature=0.0)
 
 # System constants
 # Maximum number of tool call iterations for individual researcher agents

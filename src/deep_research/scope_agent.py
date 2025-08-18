@@ -6,14 +6,11 @@ from state_scope import ClarifyWithUser , ResearchQuestion
 from langchain_core.messages import HumanMessage, AIMessage, get_buffer_string
 from prompts import clarify_with_user_instructions , transform_messages_into_research_topic_prompt
 from langgraph.graph import StateGraph, START, END
-from dotenv import load_dotenv
+from config import config
 from utils import get_today_str
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Initialize model
-model = init_chat_model(model="openai:gpt-4.1", temperature=0.0)
+# Initialize model using config
+model = init_chat_model(model=config.get_scope_agent_model(), temperature=0.0)
 
 
 

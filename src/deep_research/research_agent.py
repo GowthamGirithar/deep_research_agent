@@ -1,6 +1,6 @@
 from langchain.chat_models import init_chat_model
 from state_research import ResearchState, ResearcherOutputState
-from dotenv import load_dotenv
+from config import config
 from tools import think_tool, get_mcp_client
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage, filter_messages
 from prompts import research_agent_prompt_with_mcp, compress_research_human_message, compress_research_system_prompt
@@ -8,13 +8,8 @@ from utils import get_today_str
 from typing_extensions import Literal
 from langgraph.graph import StateGraph, START, END
 
-
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Initialize model
-model = init_chat_model(model="openai:gpt-4.1", temperature=0.0)
+# Initialize model using config
+model = init_chat_model(model=config.get_research_agent_model(), temperature=0.0)
 
 async def llm_call(state: ResearchState):
     """
