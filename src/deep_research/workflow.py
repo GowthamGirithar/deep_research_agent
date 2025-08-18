@@ -15,19 +15,19 @@ load_dotenv()
 checkpointer = InMemorySaver()
 
 
-deep_reasearch_workflow = StateGraph(AgentState, input_schema= AgentInputState)
+deep_reasearch_builder = StateGraph(AgentState, input_schema= AgentInputState)
 
 # Add workflow nodes
-deep_reasearch_workflow.add_node("clarify_with_user", clarify_with_user)
-deep_reasearch_workflow.add_node("write_research_brief", write_research_brief)
-deep_reasearch_workflow.add_node("supervisor_subgraph", supervisor_agent)
-deep_reasearch_workflow.add_node("final_report_generation", final_report_generation)
+deep_reasearch_builder.add_node("clarify_with_user", clarify_with_user)
+deep_reasearch_builder.add_node("write_research_brief", write_research_brief)
+deep_reasearch_builder.add_node("supervisor_subgraph", supervisor_agent)
+deep_reasearch_builder.add_node("final_report_generation", final_report_generation)
 # Add edges 
-deep_reasearch_workflow.add_edge(START, "clarify_with_user")
+deep_reasearch_builder.add_edge(START, "clarify_with_user")
 # deep_reasearch_workflow.add_edge("clarify_with_user", "write_research_brief") - It makes clarify_with_user always go to write_research_brief and does not end even if we provide command goto END
-deep_reasearch_workflow.add_edge("write_research_brief", "supervisor_subgraph")
-deep_reasearch_workflow.add_edge("supervisor_subgraph", "final_report_generation")
-deep_reasearch_workflow.add_edge("final_report_generation", END)
+deep_reasearch_builder.add_edge("write_research_brief", "supervisor_subgraph")
+deep_reasearch_builder.add_edge("supervisor_subgraph", "final_report_generation")
+deep_reasearch_builder.add_edge("final_report_generation", END)
 
 '''
 reason for above commented line 
@@ -41,7 +41,7 @@ To respect dynamic goto commands (like stopping at END), do not create edges tha
 '''
 
 # Compile the workflow
-deep_research_agent = deep_reasearch_workflow.compile()
+deep_research_agent = deep_reasearch_builder.compile()
 
 
 async def main():

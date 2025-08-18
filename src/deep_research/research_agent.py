@@ -99,10 +99,14 @@ def compress_research_finding(state: ResearchState):
     file-based research content from MCP tools.
     """
      
-     system_message = compress_research_system_prompt.format(date=get_today_str())
+     researcher_messages = state.get("researcher_messages", [])
+    
+    # Add instruction to switch from research mode to compression mode
+     researcher_messages.append(HumanMessage(content=compress_research_human_message))
      
-     messages = [SystemMessage(content=system_message)] + state.get("researcher_messages", [])  +[HumanMessage(content=compress_research_human_message)] # TODO: where is the topic being passed
-     
+          
+     compression_prompt = compress_research_system_prompt.format(date=get_today_str())
+     messages = [SystemMessage(content=compression_prompt)] + researcher_messages
 
      response = model.invoke(messages)
 
